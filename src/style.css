@@ -1,13 +1,7 @@
 @import "tailwindcss";
 
-@theme {
-  --color-main-bg: var(--color-stone-800);
-  --color-point-purple: #582a72;
-  --color-card-surface: var(--color-stone-600);
-}
-
 @layer base {
   body {
-    @apply bg-(--color-main-bg) min-h-screen flex justify-center p-10;
+    font-family: "Pretendard", sans-serif;
   }
 }

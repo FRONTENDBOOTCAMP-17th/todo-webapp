@@ -1,33 +1,196 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko-KR">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>bootcamp-todo-project</title>
+    <title>Todo List</title>
   </head>
-  <body>
-    <div id="app" class="bg-stone-600 rounded-2xl px-16 py-4">
-      <h1 class="text-stone-50">Todo List</h1>
-      <form
-        action=""
-        class="shadow-sm bg-stone-100 appearance-none outline-none rounded-sm flex overflow-hidden"
-      >
-        <input
-          type="text"
-          id="todo-input"
-          placeholder="할 일을 입력하세요!"
-          class="flex-1 px-1"
-        />
-        <button type="submit" id="add-btn" class="bg-amber-600 p-1.5">
-          추가
+  <body
+    class="min-h-screen bg-neutral-950 flex flex-col items-center px-4 py-12"
+  >
+    <div id="app" class="w-full max-w-lg flex flex-col gap-6">
+      <!-- 타이틀 -->
+      <h1 class="text-white text-4xl font-bold text-center">Todo List!</h1>
+
+      <!-- 전역 메시지 -->
+      <p
+        id="error-message"
+        class="hidden rounded-lg bg-red-900/60 text-red-300 px-4 py-3 text-sm text-center"
+      ></p>
+      <p
+        id="success-message"
+        class="hidden rounded-lg bg-emerald-900/60 text-emerald-300 px-4 py-3 text-sm text-center"
+      ></p>
+
+      <!-- 인증 섹션 -->
+      <section id="auth-section" class="flex flex-col gap-3">
+        <!-- 회원가입 -->
+        <div class="bg-neutral-800 rounded-2xl p-5 flex flex-col gap-2">
+          <p class="text-neutral-300 text-sm font-medium mb-1">회원가입</p>
+          <form id="signup-form" class="flex flex-col gap-2">
+            <input
+              id="signup-username"
+              name="username"
+              type="text"
+              placeholder="아이디 (4~20자 영문/숫자)"
+              class="rounded-xl bg-neutral-700 text-white placeholder-neutral-500 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-400"
+            />
+            <input
+              id="signup-password"
+              name="password"
+              type="password"
+              placeholder="비밀번호 (4~20자)"
+              class="rounded-xl bg-neutral-700 text-white placeholder-neutral-500 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-400"
+            />
+            <input
+              id="signup-nickname"
+              name="nickname"
+              type="text"
+              placeholder="닉네임 (2~20자)"
+              class="rounded-xl bg-neutral-700 text-white placeholder-neutral-500 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-400"
+            />
+            <button
+              type="submit"
+              class="rounded-xl bg-neutral-600 hover:bg-neutral-500 text-white text-sm font-medium py-2.5 transition-colors"
+            >
+              가입하기
+            </button>
+          </form>
+        </div>
+
+        <!-- 로그인 -->
+        <div class="bg-neutral-800 rounded-2xl p-5 flex flex-col gap-2">
+          <p class="text-neutral-300 text-sm font-medium mb-1">로그인</p>
+          <form id="login-form" class="flex flex-col gap-2">
+            <input
+              id="login-username"
+              name="username"
+              type="text"
+              placeholder="아이디"
+              class="rounded-xl bg-neutral-700 text-white placeholder-neutral-500 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-400"
+            />
+            <input
+              id="login-password"
+              name="password"
+              type="password"
+              placeholder="비밀번호"
+              class="rounded-xl bg-neutral-700 text-white placeholder-neutral-500 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-400"
+            />
+            <button
+              type="submit"
+              class="rounded-xl bg-neutral-600 hover:bg-neutral-500 text-white text-sm font-medium py-2.5 transition-colors"
+            >
+              로그인
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- 로그인 사용자 정보 -->
+      <section id="user-section" class="hidden items-center justify-between">
+        <p id="user-info" class="text-neutral-400 text-sm"></p>
+        <button
+          id="logout-btn"
+          class="text-neutral-500 hover:text-neutral-300 text-sm transition-colors"
+        >
+          로그아웃
         </button>
-      </form>
-      <template>
-        <ul>
-          <li></li>
-        </ul>
-      </template>
+      </section>
+
+      <!-- Todo 입력 폼 -->
+      <section id="todo-form-section" class="hidden flex-col gap-2">
+        <form id="todo-form" class="flex flex-col gap-2">
+          <!-- 제목 인풋 (흰 pill) -->
+          <div
+            class="flex items-center bg-white rounded-full overflow-hidden pr-1.5 pl-5 min-h-12 max-inline-size-360 inline-full"
+          >
+            <input
+              id="title"
+              name="title"
+              type="text"
+              placeholder="What do you have to do?"
+              class="flex-1 min-w-0 text-neutral-800 placeholder-neutral-400 focus:outline-none text-sm bg-transparent py-2"
+            />
+            <button
+              type="submit"
+              id="todo-submit-btn"
+              class="w-9 h-9 rounded-full bg-neutral-900 hover:bg-neutral-700 flex items-center justify-center shrink-0 transition-colors"
+            >
+              <img src="/src/svg/plus-white.svg" alt="추가" class="w-4 h-4" />
+            </button>
+          </div>
+
+          <!-- 설명 -->
+          <textarea
+            id="description"
+            name="description"
+            placeholder="설명 (선택)"
+            rows="2"
+            class="rounded-xl bg-neutral-800 text-white placeholder-neutral-500 px-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-600 resize-none"
+          ></textarea>
+
+          <!-- 우선순위 / 마감일 -->
+          <div class="flex gap-2">
+            <select
+              id="priority"
+              name="priority"
+              class="flex-1 rounded-xl bg-neutral-800 text-neutral-400 px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-600"
+            >
+              <option value="LOW">낮음</option>
+              <option value="MEDIUM" selected>보통</option>
+              <option value="HIGH">높음</option>
+            </select>
+            <input
+              id="dueDate"
+              name="dueDate"
+              type="date"
+              class="flex-1 rounded-xl bg-neutral-800 text-neutral-400 px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-neutral-600"
+            />
+          </div>
+
+          <!-- 수정 모드 취소 버튼 -->
+          <button
+            type="button"
+            id="todo-cancel-btn"
+            class="hidden rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-400 text-sm font-medium py-2 transition-colors"
+          >
+            취소
+          </button>
+        </form>
+      </section>
+
+      <!-- Todo 목록 섹션 -->
+      <section id="todo-list-section" class="hidden flex-col gap-3">
+        <!-- 필터 -->
+        <div class="flex gap-2">
+          <select
+            id="filter-completed"
+            class="rounded-xl bg-neutral-800 text-neutral-400 px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-neutral-600"
+          >
+            <option value="">전체 상태</option>
+            <option value="false">미완료</option>
+            <option value="true">완료</option>
+          </select>
+          <select
+            id="filter-priority"
+            class="rounded-xl bg-neutral-800 text-neutral-400 px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-neutral-600"
+          >
+            <option value="">전체 우선순위</option>
+            <option value="HIGH">높음</option>
+            <option value="MEDIUM">보통</option>
+            <option value="LOW">낮음</option>
+          </select>
+        </div>
+
+        <!-- 빈 목록 -->
+        <p id="empty-message" class="text-neutral-600 text-center py-6 text-sm">
+          등록된 할 일이 없습니다.
+        </p>
+
+        <!-- Todo 목록 -->
+        <ul id="todo-list" class="flex flex-col gap-2"></ul>
+      </section>
     </div>
     <script type="module" src="/src/main.js"></script>
   </body>
